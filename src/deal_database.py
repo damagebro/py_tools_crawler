@@ -107,13 +107,13 @@ def xls_cellwidth_adj( str_cell ):
 
     return ui_cellwidth
 
-#过滤xq_db: 均价6W以下,建成年代2000年以后;
+#过滤xq_db: 均价7W以下,建成年代2000年以后;
 def filter_xq_db( fi_db, fo_db ):
-    'func: 过滤xq_db: 均价6W以下,建成年代2000年以后'
+    'func: 过滤xq_db: 均价7W以下,建成年代2000年以后'
     conn = sqlite3.connect(fi_db)
     cu = conn.cursor()
 
-    print( 'NOTICE(), 把数据库:"{}" 过滤掉均价6W以上，建成年代2000年以前的小区, 过滤后写到:"{}"'.format( fi_db, fo_db ) )
+    print( 'NOTICE(), 把数据库:"{}" 过滤掉均价7W以上，建成年代2000年以前的小区, 过滤后写到:"{}"'.format( fi_db, fo_db ) )
     #获取所有db内容
     list_row=[]
     command="SELECT * from xiaoqu"
