@@ -130,6 +130,9 @@ def filter_xq_db( fi_db, fo_db ):
     for i in range(len(list_row)):
         str_year = list_row[i][ dict_xq_val2idx['建造时间'] ]
         str_price= list_row[i][ dict_xq_val2idx['均价'] ]
+        li_str_price = str_price.split(',')
+        if( len(li_str_price)>=2 ):
+            str_price = li_str_price[0]+li_str_price[1]
         lst_year  = re.findall( '\d+', str_year  )
         lst_price = re.findall( '\d+', str_price )
         ui_year  = 0
@@ -224,9 +227,12 @@ def deal_db2xls(fn_db, fn_xls):
 if __name__=="__main__":
     fn_db     = 'lianjia-xq.db'
     fn_db_flt = 'lianjia-xq_filter.db'
+    fn_db_cj  = 'lianjia-cj.db'
     filter_xq_db( fn_db, fn_db_flt )
 
     fn_xls= 'lianjia-xq.xls'
     deal_db2xls( fn_db, fn_xls )
     fn_xls= 'lianjia-xq_filter.xls'
     deal_db2xls( fn_db_flt, fn_xls )
+    fn_xls= 'lianjia-cj.xls'
+    deal_db2xls( fn_db_cj, fn_xls )

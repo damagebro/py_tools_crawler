@@ -21,7 +21,7 @@ from deal_database import *
 # regions=["浦东","闵行","黄浦","徐汇","杨浦","普陀"]
 # regions=["浦东","徐汇","静安"]
 # regions=["浦东"]
-regions=["浦东","闵行","宝山","徐汇","普陀","杨浦","长宁","嘉定","黄浦","静安","虹口"]
+regions=["徐汇","静安","杨浦","浦东","虹口","普陀","长宁","闵行","黄浦"]
 
 #多线程
 lock = threading.Lock()
@@ -46,7 +46,7 @@ hds=[{'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) 
     {'User-Agent':'Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.131 Version/11.11'}]
 
 def get_headers():
-    cookie = 'lianjia_uuid=d7bbf0de-48bf-4533-a4c2-5ec7b6b23560; _smt_uid=6323101a.3f0b709c; _ga=GA1.2.1939650368.1663242268; crosSdkDT2019DeviceId=-i1wzpl-efpe2z-927i4zz06ta7sjp-h09kt0nip; _jzqy=1.1663769546.1663769546.1.jzqsr=baidu.-; Hm_lvt_9152f8221cb6243a53c83b956842be8a=1663339151,1663490252,1663770205,1663946329; _qzjc=1; _jzqc=1; _jzqckmp=1; _gid=GA1.2.1848881404.1663946331; select_city=310000; sensorsdata2015jssdkcross={"distinct_id":"18340f6e8f087b-09e03fe6e46743-c487526-2073600-18340f6e8f1ca5","$device_id":"18340f6e8f087b-09e03fe6e46743-c487526-2073600-18340f6e8f1ca5","props":{"$latest_traffic_source_type":"直接流量","$latest_referrer":"","$latest_referrer_host":"","$latest_search_keyword":"未取到值_直接打开"}}; lianjia_ssid=1e5ef171-2557-4e53-ba90-6af4f0ebec00; _jzqa=1.841371381938893400.1663242267.1663946329.1663950564.7; _jzqx=1.1663946329.1663950564.2.jzqsr=clogin.lianjia.com|jzqct=/.jzqsr=sh.lianjia.com|jzqct=/; login_ucid=2000000070988492; lianjia_token=2.001300c0546dde9f7402ade965e67a3367; lianjia_token_secure=2.001300c0546dde9f7402ade965e67a3367; security_ticket=b/xN7lSWQVu/KuyacqPEPYT0/SV1Yygcuz8V0C4QNU2+8pm4c/ujXDJKpBFTq5fTwaYzVs0+SJ3GRFkBpHSzLLA+1vqWlF6Fjbf+rKQ1ETn8s2/PyQTfZ55C2FSdCTkDWPvmFcaqvx2xHbAQl+pIFQsdiuAUUhGKNRJQM7CtDuU=; Hm_lpvt_9152f8221cb6243a53c83b956842be8a=1663950985; _qzja=1.1460335514.1663242266810.1663946329098.1663950563780.1663950949062.1663950984710.0.0.0.86.7; _qzjb=1.1663950563780.6.0.0.0; _qzjto=6.1.0; _jzqb=1.6.10.1663950564.1; srcid=eyJ0Ijoie1wiZGF0YVwiOlwiYmNkY2U1N2YwYzdiMzM1MmMyOTlkODFlZDIwODIyYzhlYjliMTI3MDk3ODg4MzNlNzZhMDJjYWE4MWQ3YTgwMjM4MGEyMDRlZTk5NzIyM2FhZTcyNWY0N2Q4NmExN2U2Njk4ZmE3YThlZmVjZTk4M2NkZjA5NGU4MzhlYjNhMGZjNzg1ZWZiYmY0NWE5MzA5NmUyZjRiMmM5MDBlYzQ1ZjYzODc3ZTA0MzVhYTZjYjNiZTQ1N2IxYTM4NTE0ZGIxYWRiODYyNzU3YjRhMmFkZTU2YjczMGU5Mjk5ZTg2OTk3YTI2OTkzN2E2ZTFkZGQxZmY1MjE1ZDlhMDNjODQ4ZlwiLFwia2V5X2lkXCI6XCIxXCIsXCJzaWduXCI6XCIzZTA4ZmNlN1wifSIsInIiOiJodHRwczovL3NoLmxpYW5qaWEuY29tL2NoZW5namlhby9jNTAxMTAwMDAxMzcyMy8iLCJvcyI6IndlYiIsInYiOiIwLjEifQ=='
+    cookie = 'lianjia_uuid=d7bbf0de-48bf-4533-a4c2-5ec7b6b23560; _smt_uid=6323101a.3f0b709c; _ga=GA1.2.1939650368.1663242268; crosSdkDT2019DeviceId=-i1wzpl-efpe2z-927i4zz06ta7sjp-h09kt0nip; _jzqy=1.1663769546.1663769546.1.jzqsr=baidu.-; sensorsdata2015jssdkcross={"distinct_id":"18340f6e8f087b-09e03fe6e46743-c487526-2073600-18340f6e8f1ca5","$device_id":"18340f6e8f087b-09e03fe6e46743-c487526-2073600-18340f6e8f1ca5","props":{"$latest_traffic_source_type":"直接流量","$latest_referrer":"","$latest_referrer_host":"","$latest_search_keyword":"未取到值_直接打开"}}; lianjia_ssid=949be0b8-6cb3-499c-9d7d-40f830783a06; select_city=310000; Hm_lvt_9152f8221cb6243a53c83b956842be8a=1663986263,1664000496,1664001068,1665412780; _jzqa=1.841371381938893400.1663242267.1664000749.1665412780.12; _jzqc=1; _jzqx=1.1663946329.1665412780.4.jzqsr=clogin.lianjia.com|jzqct=/.jzqsr=sh.lianjia.com|jzqct=/xiaoqu/rs静安/; _jzqckmp=1; _gid=GA1.2.1356774866.1665412781; f-token=cYRJxknaRhJVDbO/XKGl1ZK9Qi1N3iLzwdrcYWWRFArkc1+CJ0rMaM4uDOYgelJg8BRsjDkbZUPiq13mGmcS/lTqYlskx0kIqh+so5sOxOtFYAx5svNnE3YZXj/nF4xiCwP3cuZjFZfwIEQ3UbDe2vqC; cy_ip=101.93.124.138; login_ucid=2000000070988492; lianjia_token=2.0010c572fa6e1b2dda01685bcba2f2a2b7; lianjia_token_secure=2.0010c572fa6e1b2dda01685bcba2f2a2b7; security_ticket=mBYWhkK83+J5DneXz6kuZOSejsM04ZHIo9BlBTExS6mX/I7JMVRP8Z0ySF89TAznz6jWFkyo9pHtCDwFkaLIwK/b8TBC1owLizhRAl1408HqKDjEXq+rNVk8sKuu91pT2btQu4zVJzLz824c4+OmwjNmU2ST2zQ00jNqmTi2G+A=; Hm_lpvt_9152f8221cb6243a53c83b956842be8a=1665415749; _jzqb=1.26.10.1665412780.1'
     headers = {
     'User-Agent': hds[random.randint(0,len(hds)-1)]['User-Agent'],
     'Cookie': cookie.encode("utf-8").decode("latin1")
@@ -54,6 +54,25 @@ def get_headers():
     return headers
 
 #爬取小区
+def get_price( xq_name=u'阳光花城' ):
+    url=u"https://sh.lianjia.com/chengjiao/rs"+urllib.request.quote(xq_name)+"/"
+    response = requests.get(url, timeout=10, headers=get_headers())
+    html = response.content
+    soup = BeautifulSoup(html, "lxml")
+    price_list = soup.findAll('div',{'class':'unitPrice'})
+    str_price = '暂无均价'
+    if( len( price_list ) ):
+        str_price = price_list[0].text
+        # print( soup,str_price, xq_name )
+    else:
+        url=u"https://sh.lianjia.com/ershoufang/rs"+urllib.request.quote(xq_name)+"/"
+        response = requests.get(url, timeout=10, headers=get_headers())
+        html = response.content
+        soup = BeautifulSoup(html, "lxml")
+        price_list = soup.findAll('div',{'class':'unitPrice'})
+        if( len( price_list ) ):
+            str_price = price_list[0].text
+    return str_price
 def do_xiaoqu_spider(db_xq,region=u"浦东"):
     """
     爬取大区域中的所有小区信息
@@ -71,37 +90,26 @@ def do_xiaoqu_spider(db_xq,region=u"浦东"):
     ui_total_pages=dict_d['totalPage']
 
     # 单线程
-    # for i in range(ui_total_pages):
-    #     url_page=u"http://bj.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
-    #     xiaoqu_spider(db_xq, url_page)
-
-    # 多线程
-    threads=[]
     for i in range(ui_total_pages):
         url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
-        t=threading.Thread(target=xiaoqu_spider,args=(db_xq,url_page))
-        threads.append(t)
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
-    print( u"爬下了 %s 区全部的小区信息" % region)
+        xiaoqu_spider(db_xq, url_page)
 
-def get_price( xq_name=u'阳光花城' ):
-    url=u"https://sh.lianjia.com/chengjiao/rs"+urllib.request.quote(xq_name)+"/"
-    response = requests.get(url, timeout=10, headers=get_headers())
-    html = response.content
-    soup = BeautifulSoup(html, "lxml")
-    price_list = soup.findAll('div',{'class':'unitPrice'})
-    str_price = '暂无均价'
-    if( len( price_list ) ):
-        str_price = price_list[0].text
-    return str_price
+    # 多线程
+    # threads=[]
+    # for i in range(ui_total_pages):
+    #     url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
+    #     t=threading.Thread(target=xiaoqu_spider,args=(db_xq,url_page))
+    #     threads.append(t)
+    # for t in threads:
+    #     t.start()
+    # for t in threads:
+    #     t.join()
+    print( u"爬下了 %s 区全部的小区信息" % region)
 def xiaoqu_spider(db_xq,url_page=u"https://sh.lianjia.com/xiaoqu/pg1rs%E6%B5%A6%E4%B8%9C/"):
     """
     爬取页面链接中的小区信息
     """
-    random_delay()
+    # random_delay()
     response = requests.get(url_page, timeout=10, headers=get_headers())
     html = response.content
     soup = BeautifulSoup(html, "lxml")
@@ -277,3 +285,5 @@ if __name__=="__main__":
     # xiaoqu_spider(db_xq)
     # xiaoqu_chengjiao_spider(db_cj)
     # chengjiao_spider(db_cj)
+    # get_price('阳光花城')
+
