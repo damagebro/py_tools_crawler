@@ -167,6 +167,11 @@ def xiaoqu_chengjiao_spider(db_cj,dict_json, xq_name=u"阳光花城",xq_subway="
     response = requests.get(url, timeout=10, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
+    str_tmp=soup.find('title').text
+    print( url, str_tmp )
+    if( str_tmp=="登录" ):
+        print( "NOTICE(), 检查到链家未登录，请输入配置文件中cookie值" )
+        exit(-1)
 
     ui_total_pages = 0
     d_tmp=soup.find('div',{'class':'page-box house-lst-page-box'})
