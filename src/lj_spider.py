@@ -1,4 +1,5 @@
 import os,sys,re
+import json
 import threadpool
 from bs4 import BeautifulSoup
 
@@ -21,7 +22,7 @@ from deal_database import *
 # regions=["浦东","闵行","黄浦","徐汇","杨浦","普陀"]
 # regions=["浦东","徐汇","静安"]
 # regions=["浦东"]
-regions=["徐汇","静安","杨浦","浦东","虹口","普陀","长宁","闵行","黄浦"]
+# regions=["浦东","徐汇","静安","杨浦","虹口","普陀","长宁","闵行","黄浦","宝山"]
 
 #多线程
 lock = threading.Lock()
@@ -45,8 +46,8 @@ hds=[{'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) 
     {'User-Agent':'Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; en) Presto/2.8.131 Version/11.11'},\
     {'User-Agent':'Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.131 Version/11.11'}]
 
-def get_headers():
-    cookie = 'lianjia_uuid=d7bbf0de-48bf-4533-a4c2-5ec7b6b23560; _smt_uid=6323101a.3f0b709c; _ga=GA1.2.1939650368.1663242268; crosSdkDT2019DeviceId=-i1wzpl-efpe2z-927i4zz06ta7sjp-h09kt0nip; _jzqy=1.1663769546.1663769546.1.jzqsr=baidu.-; sensorsdata2015jssdkcross={"distinct_id":"18340f6e8f087b-09e03fe6e46743-c487526-2073600-18340f6e8f1ca5","$device_id":"18340f6e8f087b-09e03fe6e46743-c487526-2073600-18340f6e8f1ca5","props":{"$latest_traffic_source_type":"直接流量","$latest_referrer":"","$latest_referrer_host":"","$latest_search_keyword":"未取到值_直接打开"}}; lianjia_ssid=949be0b8-6cb3-499c-9d7d-40f830783a06; select_city=310000; Hm_lvt_9152f8221cb6243a53c83b956842be8a=1663986263,1664000496,1664001068,1665412780; _jzqa=1.841371381938893400.1663242267.1664000749.1665412780.12; _jzqc=1; _jzqx=1.1663946329.1665412780.4.jzqsr=clogin.lianjia.com|jzqct=/.jzqsr=sh.lianjia.com|jzqct=/xiaoqu/rs静安/; _jzqckmp=1; _gid=GA1.2.1356774866.1665412781; f-token=cYRJxknaRhJVDbO/XKGl1ZK9Qi1N3iLzwdrcYWWRFArkc1+CJ0rMaM4uDOYgelJg8BRsjDkbZUPiq13mGmcS/lTqYlskx0kIqh+so5sOxOtFYAx5svNnE3YZXj/nF4xiCwP3cuZjFZfwIEQ3UbDe2vqC; cy_ip=101.93.124.138; login_ucid=2000000070988492; lianjia_token=2.0010c572fa6e1b2dda01685bcba2f2a2b7; lianjia_token_secure=2.0010c572fa6e1b2dda01685bcba2f2a2b7; security_ticket=mBYWhkK83+J5DneXz6kuZOSejsM04ZHIo9BlBTExS6mX/I7JMVRP8Z0ySF89TAznz6jWFkyo9pHtCDwFkaLIwK/b8TBC1owLizhRAl1408HqKDjEXq+rNVk8sKuu91pT2btQu4zVJzLz824c4+OmwjNmU2ST2zQ00jNqmTi2G+A=; Hm_lpvt_9152f8221cb6243a53c83b956842be8a=1665415749; _jzqb=1.26.10.1665412780.1'
+def get_headers(dict_json):
+    cookie = dict_json['cookie']
     headers = {
     'User-Agent': hds[random.randint(0,len(hds)-1)]['User-Agent'],
     'Cookie': cookie.encode("utf-8").decode("latin1")
@@ -54,9 +55,9 @@ def get_headers():
     return headers
 
 #爬取小区
-def get_price( xq_name=u'阳光花城' ):
+def get_price( xq_name=u'阳光花城', dict_json={} ):
     url=u"https://sh.lianjia.com/chengjiao/rs"+urllib.request.quote(xq_name)+"/"
-    response = requests.get(url, timeout=10, headers=get_headers())
+    response = requests.get(url, timeout=10, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
     price_list = soup.findAll('div',{'class':'unitPrice'})
@@ -66,14 +67,14 @@ def get_price( xq_name=u'阳光花城' ):
         # print( soup,str_price, xq_name )
     else:
         url=u"https://sh.lianjia.com/ershoufang/rs"+urllib.request.quote(xq_name)+"/"
-        response = requests.get(url, timeout=10, headers=get_headers())
+        response = requests.get(url, timeout=10, headers=get_headers(dict_json))
         html = response.content
         soup = BeautifulSoup(html, "lxml")
         price_list = soup.findAll('div',{'class':'unitPrice'})
         if( len( price_list ) ):
             str_price = price_list[0].text
     return str_price
-def do_xiaoqu_spider(db_xq,region=u"浦东"):
+def do_xiaoqu_spider(db_xq,dict_json,region=u"浦东"):
     """
     爬取大区域中的所有小区信息
     """
@@ -81,7 +82,7 @@ def do_xiaoqu_spider(db_xq,region=u"浦东"):
     url=u"http://sh.lianjia.com/xiaoqu/rs"+region+"/"
     print( url )
 
-    response = requests.get(url, timeout=10, headers=get_headers())
+    response = requests.get(url, timeout=10, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
 
@@ -92,25 +93,26 @@ def do_xiaoqu_spider(db_xq,region=u"浦东"):
     # 单线程
     for i in range(ui_total_pages):
         url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
-        xiaoqu_spider(db_xq, url_page)
+        xiaoqu_spider(db_xq, dict_json, url_page)
+        random_delay()
 
     # 多线程
     # threads=[]
     # for i in range(ui_total_pages):
     #     url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
-    #     t=threading.Thread(target=xiaoqu_spider,args=(db_xq,url_page))
+    #     t=threading.Thread(target=xiaoqu_spider,args=(db_xq,dict_json,url_page))
     #     threads.append(t)
     # for t in threads:
     #     t.start()
     # for t in threads:
     #     t.join()
     print( u"爬下了 %s 区全部的小区信息" % region)
-def xiaoqu_spider(db_xq,url_page=u"https://sh.lianjia.com/xiaoqu/pg1rs%E6%B5%A6%E4%B8%9C/"):
+def xiaoqu_spider(db_xq,dict_json, url_page=u"https://sh.lianjia.com/xiaoqu/pg1rs%E6%B5%A6%E4%B8%9C/"):
     """
     爬取页面链接中的小区信息
     """
     # random_delay()
-    response = requests.get(url_page, timeout=10, headers=get_headers())
+    response = requests.get(url_page, timeout=10, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
 
@@ -119,6 +121,10 @@ def xiaoqu_spider(db_xq,url_page=u"https://sh.lianjia.com/xiaoqu/pg1rs%E6%B5%A6%
         xq = xq_li.find('div',{'class':'info'})
         info_dict={}
         info_dict.update({u'小区名称':xq.find('a').text})
+        url_cj=u"https://sh.lianjia.com/chengjiao/rs"+info_dict['小区名称']+"/"
+        url_zs=u"https://sh.lianjia.com/ershoufang/rs"+info_dict['小区名称']+"/"
+        info_dict.update({u'成交网址':url_cj})
+        info_dict.update({u'在售网址':url_zs})
 
         content = xq.find('div',{'class':'positionInfo'}).text.strip(); #print( content )
         info = content.split(); #print( info )
@@ -132,7 +138,7 @@ def xiaoqu_spider(db_xq,url_page=u"https://sh.lianjia.com/xiaoqu/pg1rs%E6%B5%A6%
         info_dict.update({u'地铁':subway})
 
         # price = xq_li.find('div',{'class':'totalPrice'}); #print( price.text )
-        str_price = get_price( info_dict['小区名称'] ); #print( str_price )
+        str_price = get_price( info_dict['小区名称'], dict_json ); #print( str_price )
         info_dict.update({u'均价':str_price})
 
         # print( info_dict )
@@ -141,7 +147,7 @@ def xiaoqu_spider(db_xq,url_page=u"https://sh.lianjia.com/xiaoqu/pg1rs%E6%B5%A6%
 
 
 #爬取成交
-def do_xiaoqu_chengjiao_spider(db_xq,db_cj):
+def do_xiaoqu_chengjiao_spider(db_xq,db_cj, dict_json):
     """
     批量爬取小区成交记录
     """
@@ -149,19 +155,18 @@ def do_xiaoqu_chengjiao_spider(db_xq,db_cj):
     ui_housenum_xq = 0
     xq_list=db_xq.fetchall()
     for xq in xq_list:
-        ui_housenum_xq = xiaoqu_chengjiao_spider(db_cj,xq[0],xq_subway=xq[1])
+        ui_housenum_xq = xiaoqu_chengjiao_spider(db_cj,dict_json, xq[0],xq_subway=xq[1])
         count+=1
         print( 'have spidered {cnt} xiaoqu, num:{n} time:{t}'.format(cnt=count, n=ui_housenum_xq, t=datetime.datetime.now()) )
     print( 'done')
-def xiaoqu_chengjiao_spider(db_cj,xq_name=u"阳光花城 ",xq_subway="10号线"):
+def xiaoqu_chengjiao_spider(db_cj,dict_json, xq_name=u"阳光花城",xq_subway="10号线"):
     """
     爬取小区成交记录
     """
     url=u"https://sh.lianjia.com/chengjiao/rs"+urllib.request.quote(xq_name)+"/"
-    response = requests.get(url, timeout=10, headers=get_headers())
+    response = requests.get(url, timeout=10, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
-    print( url )
 
     ui_total_pages = 0
     d_tmp=soup.find('div',{'class':'page-box house-lst-page-box'})
@@ -170,18 +175,18 @@ def xiaoqu_chengjiao_spider(db_cj,xq_name=u"阳光花城 ",xq_subway="10号线")
         dict_d=eval(d); #print(d) #转换为字典
         ui_total_pages=dict_d['totalPage']
 
-    #启动单线程爬取小区成交
+    # 启动单线程爬取小区成交
     # for i in range(ui_total_pages):
     #     url_page=u"https://sh.lianjia.com/chengjiao/pg%drs%s/" % (i+1,urllib.request.quote(xq_name))
-    #     chengjiao_spider( db_cj, xq_subway, url_page )
+    #     chengjiao_spider( db_cj, dict_json, xq_subway, url_page )
 
     # 启动多线程爬取小区成交
     threads=[]
-    if( ui_total_pages>=5 ):
-        ui_total_pages=5
+    if( ui_total_pages>=3 ):
+        ui_total_pages=3
     for i in range(ui_total_pages):
         url_page=u"https://sh.lianjia.com/chengjiao/pg%drs%s/" % (i+1,urllib.request.quote(xq_name))
-        t=threading.Thread(target=chengjiao_spider,args=(db_cj,xq_subway,url_page))
+        t=threading.Thread(target=chengjiao_spider,args=(db_cj,dict_json, xq_subway,url_page))
         threads.append(t)
     for t in threads:
         pool_sema.acquire()
@@ -190,13 +195,13 @@ def xiaoqu_chengjiao_spider(db_cj,xq_name=u"阳光花城 ",xq_subway="10号线")
         t.join()
     time.sleep(8)
     return ui_total_pages
-def chengjiao_spider(db_cj, xq_subway="10号线", url_page=u"https://sh.lianjia.com/chengjiao/c5011000013723/"):
+def chengjiao_spider(db_cj, dict_json, xq_subway="10号线", url_page=u"https://sh.lianjia.com/chengjiao/c5011000013723/"):
     """
     爬取页面链接中的成交记录
     """
     random_delay()
     try:
-        response = requests.get(url_page, timeout=10, headers=get_headers())
+        response = requests.get(url_page, timeout=10, headers=get_headers(dict_json))
         html = response.content
         soup = BeautifulSoup(html, "lxml")
     except (urllib.request.HTTPError) as  e:
@@ -254,10 +259,13 @@ def chengjiao_spider(db_cj, xq_subway="10号线", url_page=u"https://sh.lianjia.
 
 
 if __name__=="__main__":
+    fp = open("config.json", "rt", encoding="utf-8")
+    dict_json = json.load(fp)
+
     fn_xq     = 'lianjia-xq.db'
     fn_xq_flt = 'lianjia-xq_flt.db'
     fn_cj     = 'lianjia-cj.db'
-    command="create table if not exists xiaoqu (name TEXT primary key UNIQUE, regionb TEXT, regions TEXT, style TEXT, year TEXT, subway TEXT, price TEXT)"
+    command="create table if not exists xiaoqu (name TEXT primary key UNIQUE, regionb TEXT, regions TEXT, style TEXT, year TEXT, subway TEXT, price TEXT, url_cj TEXT, url_zs TEXT)"
     db_xq=SQLiteWraper(fn_xq,command)
     command="create table if not exists chengjiao (href TEXT primary key UNIQUE, name TEXT, style TEXT, area TEXT, orientation TEXT, floor TEXT, year TEXT, trade_time TEXT, unit_price TEXT, total_price TEXT,fangchan_class TEXT, school TEXT, subway TEXT)"
     db_cj=SQLiteWraper(fn_cj,command)
@@ -265,25 +273,26 @@ if __name__=="__main__":
     maxconnections = 8
     pool_sema = threading.BoundedSemaphore(value=maxconnections)
     #1.爬下所有的小区信息
+    regions = dict_json["行政区"]
     for region in regions:
-        do_xiaoqu_spider(db_xq,region)
+        do_xiaoqu_spider(db_xq,dict_json, region)
 
     #2.过滤买不起的小区，得到过滤后的db
-    filter_xq_db( fn_xq, fn_xq_flt )
+    filter_xq_db( fn_xq, fn_xq_flt, dict_json )
     db_xq_flt = SQLiteWraper(fn_xq_flt)
     db_xq_flt.get_conn()
 
     #3.爬下所有小区里的成交信息
-    do_xiaoqu_chengjiao_spider(db_xq_flt,db_cj)
+    do_xiaoqu_chengjiao_spider(db_xq_flt,db_cj, dict_json)
 
     #4.db转excel
     deal_db2xls( fn_xq_flt, fn_xq_flt.split('.')[0]+'.xls' )
     deal_db2xls( fn_cj, fn_cj.split('.')[0]+'.xls' )
 
     #测试---------------
-    # do_xiaoqu_spider(db_xq,regions[0])
-    # xiaoqu_spider(db_xq)
-    # xiaoqu_chengjiao_spider(db_cj)
+    # do_xiaoqu_spider(db_xq,dict_json, regions[0])
+    # xiaoqu_spider(db_xq, dict_json)
+    # xiaoqu_chengjiao_spider(db_cj, dict_json, xq_name=u"阳光花城",xq_subway="10号线")
     # chengjiao_spider(db_cj)
-    # get_price('阳光花城')
+    # get_price('阳光花城', dict_json)
 

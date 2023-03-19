@@ -69,7 +69,7 @@ def gen_xiaoqu_insert_command(info_dict):
     """
     生成小区数据库插入命令
     """
-    info_list=[u'小区名称',u'大区域',u'小区域',u'小区户型',u'建造时间',u'地铁',u'均价']
+    info_list=[u'小区名称',u'大区域',u'小区域',u'小区户型',u'建造时间',u'地铁',u'均价',u'成交网址',u'在售网址']
     t=[]
     for il in info_list:
         if il in info_dict:
@@ -77,7 +77,7 @@ def gen_xiaoqu_insert_command(info_dict):
         else:
             t.append('')
     t=tuple(t)
-    command=(r"insert into xiaoqu values(?,?,?,?,?,?,?)",t)
+    command=(r"insert into xiaoqu values(?,?,?,?,?,?,?,?,?)",t)
     return command
 def gen_chengjiao_insert_command(info_dict):
     """
@@ -108,12 +108,14 @@ def xls_cellwidth_adj( str_cell ):
     return ui_cellwidth
 
 #过滤xq_db: 均价7W以下,建成年代2000年以后;
-def filter_xq_db( fi_db, fo_db ):
+def filter_xq_db( fi_db, fo_db, dict_json={"建成时间":2000,"单价":80000} ):
     'func: 过滤xq_db: 均价7W以下,建成年代2000年以后'
     conn = sqlite3.connect(fi_db)
     cu = conn.cursor()
 
-    print( 'NOTICE(), 把数据库:"{}" 过滤掉均价7W以上，建成年代2000年以前的小区, 过滤后写到:"{}"'.format( fi_db, fo_db ) )
+    ui_build_year = dict_json["建成时间"]
+    ui_unit_price = dict_json["单价"]
+    print( 'NOTICE(), 把数据库:"{}" 过滤掉均价{}以上，建成年代{}年以前的小区, 过滤后写到:"{}"'.format( fi_db, ui_unit_price,ui_build_year, fo_db ) )
     #获取所有db内容
     list_row=[]
     command="SELECT * from xiaoqu"
@@ -122,10 +124,10 @@ def filter_xq_db( fi_db, fo_db ):
     cu.close()
 
     #创建过滤后的db
-    command="CREATE table if not exists xiaoqu (name TEXT primary key UNIQUE, regionb TEXT, regions TEXT, style TEXT, year TEXT, subway TEXT, price TEXT)"
+    command="CREATE table if not exists xiaoqu (name TEXT primary key UNIQUE, regionb TEXT, regions TEXT, style TEXT, year TEXT, subway TEXT, price TEXT, url_cj TEXT, url_zs TEXT)"
     db_flt_xq=SQLiteWraper(fo_db,command)
 
-    dict_xq_idx2val={0:'小区名称',1:u'大区域',2:u'小区域',3:u'小区户型',4:u'建造时间',5:u'地铁',6:u'均价'}
+    dict_xq_idx2val={0:'小区名称',1:u'大区域',2:u'小区域',3:u'小区户型',4:u'建造时间',5:u'地铁',6:u'均价',7:u'成交网址',8:u'在售网址'}
     dict_xq_val2idx = {'建造时间':4, '均价':6}
     for i in range(len(list_row)):
         str_year = list_row[i][ dict_xq_val2idx['建造时间'] ]
@@ -142,7 +144,7 @@ def filter_xq_db( fi_db, fo_db ):
         if( len(lst_price) ):
             ui_price= int(lst_price[0])
         info_dict = {}
-        if( ui_year>2000 and ui_price<70000 ):
+        if( ui_year>=ui_build_year and ui_price<ui_unit_price ):
             col_cnt = 0
             one_row = list_row[i]
             for val in one_row:
