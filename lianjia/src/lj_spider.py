@@ -93,8 +93,9 @@ def do_xiaoqu_spider(db_xq,dict_json,region=u"浦东"):
     # 单线程
     for i in range(ui_total_pages):
         url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
+        print( i, url_page )
         xiaoqu_spider(db_xq, dict_json, url_page)
-        random_delay()
+        # random_delay()
 
     # 多线程
     # threads=[]
@@ -266,6 +267,7 @@ def chengjiao_spider(db_cj, dict_json, xq_subway="10号线", url_page=u"https://
 if __name__=="__main__":
     fp = open("config.json", "rt", encoding="utf-8")
     dict_json = json.load(fp)
+    print( 'cookie_charlen:{}, 如果没有填写cookie, 则不会获取成交信息'.format(len(dict_json['cookie'])) )
 
     fn_xq     = 'lianjia-xq.db'
     fn_xq_flt = 'lianjia-xq_flt.db'
@@ -286,13 +288,12 @@ if __name__=="__main__":
     filter_xq_db( fn_xq, fn_xq_flt, dict_json )
     db_xq_flt = SQLiteWraper(fn_xq_flt)
     db_xq_flt.get_conn()
+    deal_db2xls( fn_xq_flt, fn_xq_flt.split('.')[0]+'.xls' )
 
     #3.爬下所有小区里的成交信息
-    do_xiaoqu_chengjiao_spider(db_xq_flt,db_cj, dict_json)
-
-    #4.db转excel
-    deal_db2xls( fn_xq_flt, fn_xq_flt.split('.')[0]+'.xls' )
-    deal_db2xls( fn_cj, fn_cj.split('.')[0]+'.xls' )
+    if( len(dict_json['cookie'])>1 ):
+        do_xiaoqu_chengjiao_spider(db_xq_flt,db_cj, dict_json)
+        deal_db2xls( fn_cj, fn_cj.split('.')[0]+'.xls' )
 
     #测试---------------
     # do_xiaoqu_spider(db_xq,dict_json, regions[0])

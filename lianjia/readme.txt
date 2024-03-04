@@ -13,3 +13,6 @@ python ./src/lj_spider.py
     "建成时间" : 1996,  //保留该建成时间之前的小区
     "单价" : 80000      //保留该单价以下的小区
 }
+
+#sql lite工具
+https://sqlitestudio.pl/
