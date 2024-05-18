@@ -56,7 +56,7 @@ def get_headers(dict_json):
 
 #爬取小区
 def get_price( xq_name=u'阳光花城', dict_json={} ):
-    url=u"https://sh.lianjia.com/chengjiao/rs"+urllib.request.quote(xq_name)+"/"
+    url=u"https://sh.lianjia.com/ershoufang/rs"+urllib.request.quote(xq_name)+"/"
     response = requests.get(url, timeout=10, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
@@ -78,8 +78,8 @@ def do_xiaoqu_spider(db_xq,dict_json,region=u"浦东"):
     """
     爬取大区域中的所有小区信息
     """
-    # url=u"http://bj.lianjia.com/xiaoqu/rs"+region+"/"
-    url=u"http://sh.lianjia.com/xiaoqu/rs"+region+"/"
+    # url=u"https://bj.lianjia.com/xiaoqu/rs"+region+"/"
+    url=u"https://sh.lianjia.com/xiaoqu/rs"+region+"/"
     print( url )
 
     response = requests.get(url, timeout=10, headers=get_headers(dict_json))
@@ -92,7 +92,7 @@ def do_xiaoqu_spider(db_xq,dict_json,region=u"浦东"):
 
     # 单线程
     for i in range(ui_total_pages):
-        url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
+        url_page=u"https://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
         print( i, url_page )
         xiaoqu_spider(db_xq, dict_json, url_page)
         # random_delay()
@@ -100,7 +100,7 @@ def do_xiaoqu_spider(db_xq,dict_json,region=u"浦东"):
     # 多线程
     # threads=[]
     # for i in range(ui_total_pages):
-    #     url_page=u"http://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
+    #     url_page=u"https://sh.lianjia.com/xiaoqu/pg%drs%s/" % (i+1,region)
     #     t=threading.Thread(target=xiaoqu_spider,args=(db_xq,dict_json,url_page))
     #     threads.append(t)
     # for t in threads:

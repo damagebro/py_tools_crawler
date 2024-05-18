@@ -124,10 +124,10 @@ def filter_xq_db( fi_db, fo_db, dict_json={"建成时间":2000,"单价":80000} )
     cu.close()
 
     #创建过滤后的db
-    command="CREATE table if not exists xiaoqu (name TEXT primary key UNIQUE, regionb TEXT, regions TEXT, style TEXT, year TEXT, subway TEXT, price TEXT, url_cj TEXT, url_zs TEXT)"
+    command="CREATE table if not exists xiaoqu (name TEXT primary key UNIQUE, regionb TEXT, regions TEXT, style TEXT, year TEXT, subway TEXT, price TEXT, url_zs TEXT, url_cj TEXT)"
     db_flt_xq=SQLiteWraper(fo_db,command)
 
-    dict_xq_idx2val={0:'小区名称',1:u'大区域',2:u'小区域',3:u'小区户型',4:u'建造时间',5:u'地铁',6:u'均价',7:u'成交网址',8:u'在售网址'}
+    dict_xq_idx2val={0:'小区名称',1:u'大区域',2:u'小区域',3:u'小区户型',4:u'建造时间',5:u'地铁',6:u'均价',7:u'在售网址',8:u'成交网址'}
     dict_xq_val2idx = {'建造时间':4, '均价':6}
     for i in range(len(list_row)):
         str_year = list_row[i][ dict_xq_val2idx['建造时间'] ]
