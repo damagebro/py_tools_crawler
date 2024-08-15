@@ -57,7 +57,7 @@ def get_headers(dict_json):
 #爬取小区
 def get_price( xq_name=u'阳光花城', dict_json={} ):
     url=u"https://sh.lianjia.com/ershoufang/rs"+urllib.request.quote(xq_name)+"/"
-    response = requests.get(url, timeout=10, headers=get_headers(dict_json))
+    response = requests.get(url, timeout=20, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
     price_list = soup.findAll('div',{'class':'unitPrice'})
@@ -67,7 +67,7 @@ def get_price( xq_name=u'阳光花城', dict_json={} ):
         # print( soup,str_price, xq_name )
     else:
         url=u"https://sh.lianjia.com/ershoufang/rs"+urllib.request.quote(xq_name)+"/"
-        response = requests.get(url, timeout=10, headers=get_headers(dict_json))
+        response = requests.get(url, timeout=20, headers=get_headers(dict_json))
         html = response.content
         soup = BeautifulSoup(html, "lxml")
         price_list = soup.findAll('div',{'class':'unitPrice'})
@@ -82,7 +82,7 @@ def do_xiaoqu_spider(db_xq,dict_json,region=u"浦东"):
     url=u"https://sh.lianjia.com/xiaoqu/rs"+region+"/"
     print( url )
 
-    response = requests.get(url, timeout=10, headers=get_headers(dict_json))
+    response = requests.get(url, timeout=20, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
 
@@ -113,7 +113,7 @@ def xiaoqu_spider(db_xq,dict_json, url_page=u"https://sh.lianjia.com/xiaoqu/pg1r
     爬取页面链接中的小区信息
     """
     # random_delay()
-    response = requests.get(url_page, timeout=10, headers=get_headers(dict_json))
+    response = requests.get(url_page, timeout=20, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
 
@@ -165,7 +165,7 @@ def xiaoqu_chengjiao_spider(db_cj,dict_json, xq_name=u"阳光花城",xq_subway="
     爬取小区成交记录
     """
     url=u"https://sh.lianjia.com/chengjiao/rs"+urllib.request.quote(xq_name)+"/"
-    response = requests.get(url, timeout=10, headers=get_headers(dict_json))
+    response = requests.get(url, timeout=20, headers=get_headers(dict_json))
     html = response.content
     soup = BeautifulSoup(html, "lxml")
     str_tmp=soup.find('title').text
@@ -207,7 +207,7 @@ def chengjiao_spider(db_cj, dict_json, xq_subway="10号线", url_page=u"https://
     """
     random_delay()
     try:
-        response = requests.get(url_page, timeout=10, headers=get_headers(dict_json))
+        response = requests.get(url_page, timeout=20, headers=get_headers(dict_json))
         html = response.content
         soup = BeautifulSoup(html, "lxml")
     except (urllib.request.HTTPError) as  e:
